@@ -125,6 +125,7 @@ class BilinearGANModel(BaseModel):
     def forward(self):
         """Run forward pass; called by both functions <optimize_parameters> and <test>."""
         # self.fake = self.netG(self.real_image,self.year_label)
+        print("FORWARD BILINEAR")
         batch_size = self.real_image.shape[0]
         all_year_variation = self.all_one_hot(batch_size,self.dim_year)
 
