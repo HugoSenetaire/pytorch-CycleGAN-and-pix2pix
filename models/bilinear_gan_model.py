@@ -67,11 +67,11 @@ class BilinearGANModel(BaseModel):
         # define networks (both Generators and discriminators)
         # The naming is different from those used in the paper.
         # Code (vs. paper): G_A (G), G_B (F), D_A (D_Y), D_B (D_X)
-        self.netG = define_G(opt.input_nc, opt.output_nc, opt.ngf, opt.netG, opt.norm,
+        self.netG = networks.define_G(opt.input_nc, opt.output_nc, opt.ngf, opt.netG, opt.norm,
                                         not opt.no_dropout, opt.init_type, opt.init_gain, self.gpu_ids, opt.dim_year)
 
         if self.isTrain:  # define discriminators
-            self.netD = define_D(opt.output_nc, opt.ndf, opt.netD,
+            self.netD = networks.define_D(opt.output_nc, opt.ndf, opt.netD,
                                             opt.n_layers_D, opt.norm, opt.init_type, opt.init_gain, self.gpu_ids)
 
         if self.isTrain:
