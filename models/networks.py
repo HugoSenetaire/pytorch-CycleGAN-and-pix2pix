@@ -373,7 +373,7 @@ class ResnetGeneratorBilinear(nn.Module):
             mult = 2 ** (n_downsampling - i)
             model_up_aux += [nn.ConvTranspose2d(ngf * mult, int(ngf * mult / 2),
                                          kernel_size=5, stride=4,
-                                         padding=2, output_padding=1,
+                                         padding=2, output_padding=3,
                                          bias=use_bias),
                       norm_layer(int(ngf * mult / 2)),
                       nn.ReLU(True)]
