@@ -332,9 +332,9 @@ class ResnetGeneratorBilinear(nn.Module):
             padding_type (str)  -- the name of padding layer in conv layers: reflect | replicate | zero
         """
         assert(n_blocks >= 0)
+        super(ResnetGeneratorBilinear, self).__init__()
         self.dim_year = dim_year
         self.input_size = input_size
-        super(ResnetGenerator, self).__init__()
         if type(norm_layer) == functools.partial:
             use_bias = norm_layer.func == nn.InstanceNorm2d
         else:
