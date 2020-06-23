@@ -371,7 +371,7 @@ class ResnetGeneratorBilinear(nn.Module):
 
         
                 
-
+        print("Downsampled")
 
         model_up = []
         for i in range(n_downsampling):  # add upsampling layers
@@ -385,9 +385,11 @@ class ResnetGeneratorBilinear(nn.Module):
         model_up += [nn.ReflectionPad2d(3)]
         model_up += [nn.Conv2d(ngf, output_nc, kernel_size=7, padding=0)]
         model_up += [nn.Tanh()]
-
+        print("Sequential model down")
         self.model_down = nn.Sequential(*model_down)
+        print("Sequential model up")
         self.model_up = nn.Sequential(*model_up)
+        print("END")
 
     def forward(self, images, year):
         features = self.model_down(images)
