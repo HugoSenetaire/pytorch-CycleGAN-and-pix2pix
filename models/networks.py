@@ -348,7 +348,7 @@ class ResnetGeneratorBilinear(nn.Module):
                  nn.ReLU(True)]
                 
 
-        n_downsampling = 2
+        n_downsampling = 4
         for i in range(n_downsampling):  # add downsampling layers
             mult = 2 ** i
             model_down += [nn.Conv2d(ngf * mult, ngf * mult * 2, kernel_size=3, stride=2, padding=1, bias=use_bias),
@@ -369,7 +369,8 @@ class ResnetGeneratorBilinear(nn.Module):
         print("Max Filter", self.maxfilter)
         print("Input size", self.input_size)
         print("n_downsampling", n_downsampling)
-    
+
+        self.bilinear1 = nn.Bilinear(self.total_input,self.dim_year,self.total_input)
         
                 
         print("Downsampled")
@@ -392,7 +393,6 @@ class ResnetGeneratorBilinear(nn.Module):
         self.model_up = nn.Sequential(*model_up)
 
         print("Bilinear")
-        self.bilinear1 = nn.Bilinear(self.total_input,self.dim_year,self.total_input)
         
 
         print("END")
