@@ -62,7 +62,7 @@ class CarsDataset(BaseDataset):
         img_transform = self.transforms(rgbimg)
         # data_year = torch.tensor(data_year)
         data_year_one_hot = torch.zeros(self.dim).scatter_(0, torch.tensor([data_year]), 1.0)
-        print("data_year_one_hot",data_year_one_hot.shape)
+        # print("data_year_one_hot",data_year_one_hot.shape)
         return img_transform,data_year_one_hot
 
 
