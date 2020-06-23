@@ -64,7 +64,7 @@ class BilinearGANModel(BaseModel):
             self.optimizers.append(self.optimizer_D)
 
 
-    def random_one_hot(batch,dim):
+    def random_one_hot(self, batch,dim):
         """ 
         Random tensor wirh shape = size
         """
@@ -76,7 +76,7 @@ class BilinearGANModel(BaseModel):
         return data_year_one_hot
 
 
-    def all_one_hot(batch,dim=self.dim_year):
+    def all_one_hot(self, batch,dim):
         """ Get all possible date in one hot format """
         ######### A change en utilisant scatter comme au dessus, ça peut se faire directement
         data_year_one_hot = torch.zeros(batch)[:,None]
@@ -91,7 +91,6 @@ class BilinearGANModel(BaseModel):
             input (dict): include the data itself and its metadata information.
         The option 'direction' can be used to swap domain A and domain B.
         """
-        
         self.real_image = input[0].to(self.device)
         self.year_label = input[1].to(self.device)
         # AtoB = self.opt.direction == 'AtoB'
@@ -103,7 +102,7 @@ class BilinearGANModel(BaseModel):
         """Run forward pass; called by both functions <optimize_parameters> and <test>."""
         # self.fake = self.netG(self.real_image,self.year_label)
         batch_size = self.real_image.shape[0]
-        all_year_variation = all_one_hot(batch_size)
+        all_year_variation = self.all_one_hot(batch_size,self.dim_year)
 
 
         self.real_image_cat = self.real_image.clone()
