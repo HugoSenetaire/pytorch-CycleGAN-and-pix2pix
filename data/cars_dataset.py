@@ -27,7 +27,7 @@ class CarsDataset(BaseDataset):
         super().__init__(opt)
         self.opt = opt
         self.folder = opt.dataroot
-        csv_path = os.path.join(input_folder,'year_dir.csv')
+        csv_path = os.path.join(folder,'year_dir.csv')
         self.csv_path = csv_path
         # self.image_size = image_size
         self.df = pd.read_csv(csv_path)
