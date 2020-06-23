@@ -118,7 +118,6 @@ class BilinearGANModel(BaseModel):
         """
         self.real_image = input[0].to(self.device)
         self.year_label = input[1].to(self.device)
-        print("SET INPUT SHAPE",self.year_label.shape)
         # AtoB = self.opt.direction == 'AtoB'
         # self.real_A = input['A' if AtoB else 'B'].to(self.device)
         # self.real_B = input['B' if AtoB else 'A'].to(self.device)
@@ -133,9 +132,11 @@ class BilinearGANModel(BaseModel):
 
         self.real_image_cat = self.real_image.clone()
         year_label_cat = self.year_label.clone()
-        for k in range(batch_size-1):
+        for k in range(self.dim_year-1):
             self.real_image_cat = torch.cat((self.real_image_cat,self.real_image.clone()),dim=0)
             year_label_cat = torch.cat((year_label_cat,self.year_label.clone()),dim=0)
+        print(self.real_image_cat.shape)
+        print(all_year_variation.shape)
         self.new_fake = self.netG(self.real_image_cat,all_year_variation)
         self.rec = self.netG(self.new_fake,year_label_cat)
 
