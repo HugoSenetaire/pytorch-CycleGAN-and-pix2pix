@@ -349,10 +349,10 @@ class ResnetGeneratorBilinear(nn.Module):
         self.first_layer = nn.Sequential(*first_layer)
                 
         model_down = []
-        n_downsampling = 7
+        n_downsampling = 4
         for i in range(n_downsampling):  # add downsampling layers
             mult = 2 ** i
-            model_down += [nn.Conv2d(ngf * mult, ngf * mult * 2, kernel_size=3, stride=2, padding=1, bias=use_bias),
+            model_down += [nn.Conv2d(ngf * mult, ngf * mult * 2, kernel_size=5, stride=4, padding=2, bias=use_bias),
                       norm_layer(ngf * mult * 2),
                       nn.ReLU(True)]
 
@@ -361,8 +361,8 @@ class ResnetGeneratorBilinear(nn.Module):
 
             model_down += [ResnetBlock(ngf * mult, padding_type=padding_type, norm_layer=norm_layer, use_dropout=use_dropout, use_bias=use_bias)]
 
-        self.new_size =  int(self.input_size/(2**n_downsampling))
-        self.total_input = int((self.input_size/(2**n_downsampling))*(self.input_size/(2**n_downsampling))*ngf*mult)
+        self.new_size =  int(self.input_size/(4**n_downsampling))
+        self.total_input = int((self.input_size/(4**n_downsampling))*(self.input_size/(4**n_downsampling))*ngf*mult)
         print("input size", self.input_size)
         print("total_input",self.total_input)
         print("new_size",self.new_size)
