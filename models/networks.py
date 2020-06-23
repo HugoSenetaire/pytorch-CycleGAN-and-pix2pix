@@ -346,7 +346,7 @@ class ResnetGeneratorBilinear(nn.Module):
                  nn.Conv2d(input_nc, ngf, kernel_size=7, padding=0, bias=use_bias),
                  norm_layer(ngf),
                  nn.ReLU(True)]
-        self.first_layer = nn.sequential(*first_layer)
+        self.first_layer = nn.Sequential(*first_layer)
                 
         model_down = []
         n_downsampling = 4
