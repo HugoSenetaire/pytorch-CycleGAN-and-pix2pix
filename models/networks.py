@@ -357,8 +357,8 @@ class ResnetGeneratorBilinear(nn.Module):
 
             model_down += [ResnetBlock(ngf * mult, padding_type=padding_type, norm_layer=norm_layer, use_dropout=use_dropout, use_bias=use_bias)]
 
-        self.new_size =  (self.input_size/(2**n_downsampling)).type("int")
-        self.total_input = (self.input_size/(2**n_downsampling))*(self.input_size/(2**n_downsampling))*ngf*mult.int()
+        self.new_size =  int(self.input_size/(2**n_downsampling))
+        self.total_input = int((self.input_size/(2**n_downsampling))*(self.input_size/(2**n_downsampling))*ngf*mult)
         self.maxfilter = ngf * mult
         print("ALL SIZES")
         print("New Sizes",self.new_size)
