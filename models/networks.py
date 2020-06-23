@@ -366,6 +366,8 @@ class ResnetGeneratorBilinear(nn.Module):
         print("New Sizes",self.new_size)
         print("Total inpu",self.total_input)
         print("Max Filter", self.maxfilter)
+        print("Input size", self.input_size)
+        print("n_downsampling", n_downsampling)
         self.bilinear1 = nn.Bilinear(self.total_input,self.dim_year,self.total_input)
         
 
