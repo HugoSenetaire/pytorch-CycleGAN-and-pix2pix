@@ -24,7 +24,7 @@ def treat_df(df):
 
 class CarsDataset(BaseDataset):
     def __init__(self, opt):
-        super().__init__()
+        super().__init__(opt)
         self.opt = opt
         self.folder = opt.dataroot
         csv_path = os.path.join(input_folder,'year_dir.csv')
