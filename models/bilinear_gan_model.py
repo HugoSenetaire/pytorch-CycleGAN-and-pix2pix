@@ -113,10 +113,6 @@ class BilinearGANModel(BaseModel):
             year_label_cat = torch.cat((year_label_cat,self.year_label.clone()),dim=0)
         self.new_fake = self.netG(real_image_cat,all_year_variation)
         self.rec = self.netG(self.new_fake,year_label_cat)
-        # self.fake_B = self.netG_A(self.real_A)  # G_A(A)
-        # self.rec_A = self.netG_B(self.fake_B)   # G_B(G_A(A))
-        # self.fake_A = self.netG_B(self.real_B)  # G_B(B)
-        # self.rec_B = self.netG_A(self.fake_A)   # G_A(G_B(B))
 
     def backward_D_basic(self, netD, real, fake):
         """Calculate GAN loss for the discriminator
@@ -151,7 +147,7 @@ class BilinearGANModel(BaseModel):
         lambda_cycle = self.opt.lambda_cycle
         # Identity loss
         if lambda_idt > 0:
-            self.idt = self.netG(self.real)
+            self.idt = self.netG(self.real_image, self.year_label)
             self.loss_idt = self.criterionIdt(self.idt, self.real) * lambda_idt
         else:
             self.loss_idt = 0
