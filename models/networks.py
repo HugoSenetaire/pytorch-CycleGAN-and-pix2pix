@@ -399,7 +399,7 @@ class ResnetGeneratorBilinear(nn.Module):
         features = torch.reshape(features,(-1,self.maxfilter,self.new_size,self.new_size))
         print("features reshaped", features.shape)
         generated = self.model_up(features)
-        print(generated.shape())
+        print(generated.shape)
         return generated
 
 
