@@ -22,7 +22,7 @@ def treat_df(df):
   new_df = new_df.applymap(lambda x: dic_label[x] )
   return new_df
 
-class CarsDataset(data.Dataset):
+class CarsDataset(BaseDataset):
     def __init__(self, folder, image_size, transparent = False):
         super().__init__()
         self.folder = folder
