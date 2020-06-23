@@ -104,6 +104,8 @@ class BilinearGANModel(BaseModel):
     def all_one_hot(self, batch,dim):
         """ Get all possible date in one hot format """
         ######### A change en utilisant scatter comme au dessus, ça peut se faire directement
+        print(batch)
+        print(dim)
         data_year_one_hot = torch.zeros(batch)[:,None]
         for i in range(1,dim):
             data_year_one_hot = torch.cat((data_year_one_hot,torch.ones(dim)[:,None]),dim=0)
@@ -136,7 +138,7 @@ class BilinearGANModel(BaseModel):
             self.real_image_cat = torch.cat((self.real_image_cat,self.real_image.clone()),dim=0)
             year_label_cat = torch.cat((year_label_cat,self.year_label.clone()),dim=0)
         print("real image cat", self.real_image_cat.shape)
-        print("all year variation",all_year_variation.shape)
+        print("all year variation", all_year_variation.shape)
         self.new_fake = self.netG(self.real_image_cat,all_year_variation)
         self.rec = self.netG(self.new_fake,year_label_cat)
 
