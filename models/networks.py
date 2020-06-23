@@ -363,6 +363,7 @@ class ResnetGeneratorBilinear(nn.Module):
 
         self.new_size =  int(self.input_size/(2**n_downsampling))
         self.total_input = int((self.input_size/(2**n_downsampling))*(self.input_size/(2**n_downsampling))*ngf*mult)
+        print("input size", self.input_size)
         print("total_input",self.total_input)
         print("new_size",self.new_size)
         self.maxfilter = ngf * mult
