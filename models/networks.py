@@ -342,12 +342,13 @@ class ResnetGeneratorBilinear(nn.Module):
         else:
             use_bias = norm_layer == nn.InstanceNorm2d
 
-        model_down = [nn.ReflectionPad2d(3),
+        first_layer = [nn.ReflectionPad2d(3),
                  nn.Conv2d(input_nc, ngf, kernel_size=7, padding=0, bias=use_bias),
                  norm_layer(ngf),
                  nn.ReLU(True)]
+        self.first_layer = nn.sequential(*first_layer)
                 
-
+        model_down = []
         n_downsampling = 4
         for i in range(n_downsampling):  # add downsampling layers
             mult = 2 ** i
@@ -385,7 +386,11 @@ class ResnetGeneratorBilinear(nn.Module):
     
 
     def forward(self, images, year):
-        features = self.model_down(images)
+        print("Shape imges",images.shape)
+        features = self.first_layer(images)
+        print("Shape features", features.shape)
+        features = self.model_down(features)
+        print("First layer output shape",self.model_down[])
         features = torch.flatten(features,1)
         print(features.shape)
         print(year.shape)
