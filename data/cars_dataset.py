@@ -5,6 +5,7 @@ from data.image_folder import make_dataset
 from PIL import Image
 import random
 import pandas as pd
+import torch
 
 
 def to_decade(year):
