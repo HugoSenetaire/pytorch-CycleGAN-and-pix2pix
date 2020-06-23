@@ -322,7 +322,7 @@ class ResnetGeneratorBilinear(nn.Module):
     We adapt Torch code and idea from Justin Johnson's neural style transfer project(https://github.com/jcjohnson/fast-neural-style)
     """
 
-    def __init__(self, input_nc, output_nc, input_size = 256, ngf=64, norm_layer=nn.BatchNorm2d, use_dropout=False, n_blocks=6, padding_type='reflect', dim_year = 9):
+    def __init__(self, input_nc, output_nc, ngf=64, norm_layer=nn.BatchNorm2d, use_dropout=False, n_blocks=6, padding_type='reflect', input_size = 256, dim_year = 9):
         """Construct a Resnet-based generator
         Parameters:
             input_nc (int)      -- the number of channels in input images
