@@ -363,8 +363,13 @@ class ResnetGeneratorBilinear(nn.Module):
 
         self.new_size =  int(self.input_size/(4**n_downsampling))
         self.total_input = int((self.input_size/(4**n_downsampling))*(self.input_size/(4**n_downsampling))*ngf*mult)
+        print("TOTAL INPUT", self.total_input)
+        print("dim_year", self.dim_year)
+        print("TOTAL PARAMETER", self.total_input* self.total_input*self.dim_year)
         self.maxfilter = ngf * mult
-        self.bilinear = nn.Bilinear(self.total_input,self.dim_year,self.total_input)
+        self.linear1 = nn.Linear(self.total_input, 1024)
+        self.bilinear = nn.Bilinear(1024,self.dim_year,1024)
+        self.linear2 = nn.Linear(1024, self.total_input)
         
 
 
@@ -398,7 +403,9 @@ class ResnetGeneratorBilinear(nn.Module):
         features = torch.flatten(features,1)
         # print("FEATURE YEAR",features.shape)
         # print("YEAR",year.shape)
+        features = self.linear1(features)
         features = self.bilinear(features,year)
+        features = self.linear2(features)
         features = torch.reshape(features,(-1,self.maxfilter,self.new_size,self.new_size))
         # print("features reshaped", features.shape)
         generated = self.model_up_aux(features)
