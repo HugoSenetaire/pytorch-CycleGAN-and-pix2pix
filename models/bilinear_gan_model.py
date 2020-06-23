@@ -79,7 +79,7 @@ class BilinearGANModel(BaseModel):
                 assert(opt.input_nc == opt.output_nc)
             self.fake_pool = ImagePool(opt.pool_size)  # create image buffer to store previously generated images
             # define loss functions
-            self.criterionGAN = GANLoss(opt.gan_mode).to(self.device)  # define GAN loss.
+            self.criterionGAN = networks.GANLoss(opt.gan_mode).to(self.device)  # define GAN loss.
             self.criterionCycle = torch.nn.L1Loss()
             self.criterionIdt = torch.nn.L1Loss()
             # initialize optimizers; schedulers will be automatically created by function <BaseModel.setup>.
@@ -135,7 +135,7 @@ class BilinearGANModel(BaseModel):
         for k in range(batch_size-1):
             self.real_image_cat = torch.cat((self.real_image_cat,self.real_image.clone()),dim=0)
             year_label_cat = torch.cat((year_label_cat,self.year_label.clone()),dim=0)
-        self.new_fake = self.netG(real_image_cat,all_year_variation)
+        self.new_fake = self.netG(self.real_image_cat,all_year_variation)
         self.rec = self.netG(self.new_fake,year_label_cat)
 
     def backward_D_basic(self, netD, real, fake):
