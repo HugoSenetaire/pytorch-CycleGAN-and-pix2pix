@@ -43,7 +43,7 @@ if __name__ == '__main__':
 
         for i, data in enumerate(dataset):   # inner loop within one epoch
             print("================================") 
-            print("DATA",data)
+            print("DATA",data[0].shape, data[1].shape)
             
             
             iter_start_time = time.time()  # timer for computation per iteration
