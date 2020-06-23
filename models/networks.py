@@ -360,7 +360,7 @@ class ResnetGeneratorBilinear(nn.Module):
         self.new_size =  (self.input_size/(2**n_downsampling))
         self.total_input = (self.input_size/(2**n_downsampling))*(self.input_size/(2**n_downsampling))*ngf*mult
         self.maxfilter = ngf * mult
-        self.bilinear1 = nn.Bilinear(total_input,self.dim_year,total_input)
+        self.bilinear1 = nn.Bilinear(self.total_input,self.dim_year,self.total_input)
         
 
         
