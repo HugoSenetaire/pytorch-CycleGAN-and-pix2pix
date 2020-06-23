@@ -135,8 +135,8 @@ class BilinearGANModel(BaseModel):
         for k in range(self.dim_year-1):
             self.real_image_cat = torch.cat((self.real_image_cat,self.real_image.clone()),dim=0)
             year_label_cat = torch.cat((year_label_cat,self.year_label.clone()),dim=0)
-        print(self.real_image_cat.shape)
-        print(all_year_variation.shape)
+        print("real image cat", self.real_image_cat.shape)
+        print("all year variation",all_year_variation.shape)
         self.new_fake = self.netG(self.real_image_cat,all_year_variation)
         self.rec = self.netG(self.new_fake,year_label_cat)
 
