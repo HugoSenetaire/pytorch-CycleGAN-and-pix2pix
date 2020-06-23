@@ -368,20 +368,23 @@ class ResnetGeneratorBilinear(nn.Module):
         
 
 
-        model_up = []
+        model_up_aux = []
         for i in range(n_downsampling):  # add upsampling layers
             mult = 2 ** (n_downsampling - i)
-            model_up += [nn.ConvTranspose2d(ngf * mult, int(ngf * mult / 2),
+            model_up_aux += [nn.ConvTranspose2d(ngf * mult, int(ngf * mult / 2),
                                          kernel_size=5, stride=4,
                                          padding=2, output_padding=1,
                                          bias=use_bias),
                       norm_layer(int(ngf * mult / 2)),
                       nn.ReLU(True)]
+
+        model_up = []
         model_up += [nn.ReflectionPad2d(3)]
         model_up += [nn.Conv2d(ngf, output_nc, kernel_size=7, padding=0)]
         model_up += [nn.Tanh()]
         self.model_down = nn.Sequential(*model_down)
         self.model_up = nn.Sequential(*model_up)
+        self.model_up_aux = nn.Sequential(*model_up_aux)
 
     
 
@@ -398,8 +401,10 @@ class ResnetGeneratorBilinear(nn.Module):
         features = self.bilinear(features,year)
         features = torch.reshape(features,(-1,self.maxfilter,self.new_size,self.new_size))
         print("features reshaped", features.shape)
-        generated = self.model_up(features)
-        print(generated.shape)
+        generated = self.model_up_aux(features)
+        print("GENERATED 1 ",generated.shape)
+        generated = self.model_up(generated)
+        print("GENERATED 2", generated.shape)
         return generated
 
 
