@@ -363,17 +363,9 @@ class ResnetGeneratorBilinear(nn.Module):
         self.new_size =  int(self.input_size/(2**n_downsampling))
         self.total_input = int((self.input_size/(2**n_downsampling))*(self.input_size/(2**n_downsampling))*ngf*mult)
         self.maxfilter = ngf * mult
-        print("ALL SIZES")
-        print("New Sizes",self.new_size)
-        print("Total inpu",self.total_input)
-        print("Max Filter", self.maxfilter)
-        print("Input size", self.input_size)
-        print("n_downsampling", n_downsampling)
-
         self.bilinear1 = nn.Bilinear(self.total_input,self.dim_year,self.total_input)
         
-                
-        print("Downsampled")
+
 
         model_up = []
         for i in range(n_downsampling):  # add upsampling layers
@@ -387,15 +379,10 @@ class ResnetGeneratorBilinear(nn.Module):
         model_up += [nn.ReflectionPad2d(3)]
         model_up += [nn.Conv2d(ngf, output_nc, kernel_size=7, padding=0)]
         model_up += [nn.Tanh()]
-        print("Sequential model down")
         self.model_down = nn.Sequential(*model_down)
-        print("Sequential model up")
         self.model_up = nn.Sequential(*model_up)
 
-        print("Bilinear")
-        
-
-        print("END")
+    
 
     def forward(self, images, year):
         features = self.model_down(images)

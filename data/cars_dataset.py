@@ -35,7 +35,7 @@ class CarsDataset(BaseDataset):
         self.dim = self.df.Year.max()+1
 
         input_nc = self.opt.input_nc
-        self.transform = get_transform(self.opt, grayscale=(input_nc == 1))
+        self.transforms = get_transform(self.opt, grayscale=(input_nc == 1))
         
         # transforms = []
         # # transforms.append(convert_transparent_to_rgb)
