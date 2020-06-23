@@ -23,9 +23,10 @@ def treat_df(df):
   return new_df
 
 class CarsDataset(BaseDataset):
-    def __init__(self, folder, transparent = False):
+    def __init__(self, opt):
         super().__init__()
-        self.folder = folder
+        self.opt = opt
+        self.folder = opt.dataroot
         csv_path = os.path.join(input_folder,'year_dir.csv')
         self.csv_path = csv_path
         # self.image_size = image_size
