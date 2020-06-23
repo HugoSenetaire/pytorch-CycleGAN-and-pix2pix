@@ -23,11 +23,12 @@ def treat_df(df):
   return new_df
 
 class CarsDataset(BaseDataset):
-    def __init__(self, folder, image_size, transparent = False):
+    def __init__(self, folder, transparent = False):
         super().__init__()
         self.folder = folder
+        csv_path = os.path.join(input_folder,'year_dir.csv')
         self.csv_path = csv_path
-        self.image_size = image_size
+        # self.image_size = image_size
         self.df = pd.read_csv(csv_path)
         self.df = treat_df(self.df)
         self.dim = self.df.Year.max()+1
