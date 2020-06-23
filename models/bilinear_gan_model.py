@@ -104,13 +104,9 @@ class BilinearGANModel(BaseModel):
     def all_one_hot(self, batch,dim):
         """ Get all possible date in one hot format """
         ######### A change en utilisant scatter comme au dessus, ça peut se faire directement
-        print(batch)
-        print(dim)
         data_year_one_hot = torch.zeros(batch)[:,None]
-        print("FIRST",data_year_one_hot.shape)
         for i in range(1,dim):
-            data_year_one_hot = torch.cat((data_year_one_hot,torch.ones(dim)[:,None]),dim=0)
-            print("i",data_year_one_hot.shape)
+            data_year_one_hot = torch.cat((data_year_one_hot,torch.ones(batch)[:,None]),dim=0)
         return data_year_one_hot
 
     def set_input(self, input):
