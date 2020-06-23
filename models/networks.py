@@ -390,7 +390,7 @@ class ResnetGeneratorBilinear(nn.Module):
         features = self.first_layer(images)
         print("Shape features", features.shape)
         features = self.model_down(features)
-        print("First layer output shape",self.model_down[])
+        print(features.shape)
         features = torch.flatten(features,1)
         print(features.shape)
         print(year.shape)
