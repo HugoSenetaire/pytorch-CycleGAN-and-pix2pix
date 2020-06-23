@@ -163,7 +163,7 @@ class BilinearGANModel(BaseModel):
     def backward_D(self):
         """Calculate GAN loss for discriminator D_A"""
         # fake = self.fake_pool.query(self.fake)
-        self.loss_D = self.backward_D_basic(self.netD, self.real, self.new_fake)
+        self.loss_D = self.backward_D_basic(self.netD, self.real_image, self.new_fake)
 
     
 
@@ -174,7 +174,7 @@ class BilinearGANModel(BaseModel):
         # Identity loss
         if lambda_idt > 0:
             self.idt = self.netG(self.real_image, self.year_label)
-            self.loss_idt = self.criterionIdt(self.idt, self.real) * lambda_idt
+            self.loss_idt = self.criterionIdt(self.idt, self.real_image) * lambda_idt
         else:
             self.loss_idt = 0
 
