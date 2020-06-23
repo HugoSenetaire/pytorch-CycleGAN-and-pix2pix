@@ -386,17 +386,20 @@ class ResnetGeneratorBilinear(nn.Module):
     
 
     def forward(self, images, year):
+        print("FORWARD RESNET")
         print("Shape imges",images.shape)
         features = self.first_layer(images)
         print("Shape features", features.shape)
         features = self.model_down(features)
-        print(features.shape)
+        print("Feature model down",features.shape)
         features = torch.flatten(features,1)
-        print(features.shape)
-        print(year.shape)
+        print("FEATURE YEAR",features.shape)
+        print("YEAR",year.shape)
         features = self.bilinear(features,year)
         features = torch.reshape(features,(-1,self.maxfilter,self.new_size,self.new_size))
+        print("features reshaped", features.shape)
         generated = self.model_up(features)
+        print(generated.shape())
         return generated
 
 
