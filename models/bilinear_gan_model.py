@@ -72,7 +72,7 @@ class BilinearGANModel(BaseModel):
 
         if self.isTrain:  # define discriminators
             self.netD = networks.define_D(opt.output_nc, opt.ndf, opt.netD,
-                                            opt.n_layers_D, opt.norm, opt.init_type, opt.init_gain, self.gpu_ids)
+                                            opt.n_layers_D, opt.norm, opt.init_type, opt.init_gain, self.gpu_ids, opt.output_d)
 
         if self.isTrain:
             if opt.lambda_identity > 0.0:  # only works when input and output images have the same number of channels
@@ -123,19 +123,19 @@ class BilinearGANModel(BaseModel):
         """Run forward pass; called by both functions <optimize_parameters> and <test>."""
         # self.fake = self.netG(self.real_image,self.year_label)
         print("FORWARD BILINEAR")
-        batch_size = self.real_image.shape[0]
-        all_year_variation = self.all_one_hot(batch_size,self.dim_year)
+        self.batch_size = self.real_image.shape[0]
+        self.all_year_variation = self.all_one_hot(self.batch_size,self.dim_year)
 
 
         self.real_image_cat = self.real_image.clone()
-        year_label_cat = self.year_label.clone()
+        self. year_label_cat = self.year_label.clone()
         for k in range(self.dim_year-1):
             self.real_image_cat = torch.cat((self.real_image_cat,self.real_image.clone()),dim=0)
-            year_label_cat = torch.cat((year_label_cat,self.year_label.clone()),dim=0)
+            self.year_label_cat = torch.cat((self.year_label_cat,self.year_label.clone()),dim=0)
         print("real image cat", self.real_image_cat.shape)
-        print("all year variation", all_year_variation.shape)
-        self.new_fake = self.netG(self.real_image_cat,all_year_variation)
-        self.rec = self.netG(self.new_fake,year_label_cat)
+        print("all year variation", self.all_year_variation.shape)
+        self.new_fake = self.netG(self.real_image_cat,self.all_year_variation)
+        self.rec = self.netG(self.new_fake,self.year_label_cat)
 
     def backward_D_basic(self, netD, real, fake):
         """Calculate GAN loss for the discriminator

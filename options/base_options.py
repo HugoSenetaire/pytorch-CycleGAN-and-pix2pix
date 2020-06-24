@@ -40,6 +40,7 @@ class BaseOptions():
         # dataset parameters
         parser.add_argument('--dataset_mode', type=str, default='cars', help='chooses how datasets are loaded. [cars |unaligned | aligned | single | colorization]')
         parser.add_argument('--dim_year', type = int, default=9, help = 'Argument for the year dimension')
+        parser.add_argument('--output_d', type = int, default = 9, help = "Argument for the output of the discriminator dimension")
         parser.add_argument('--direction', type=str, default='AtoB', help='AtoB or BtoA')
         parser.add_argument('--serial_batches', action='store_true', help='if true, takes images in order to make batches, otherwise takes them randomly')
         parser.add_argument('--num_threads', default=4, type=int, help='# threads for loading data')
