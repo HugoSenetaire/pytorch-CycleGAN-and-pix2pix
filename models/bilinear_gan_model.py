@@ -129,7 +129,7 @@ class BilinearGANModel(BaseModel):
         self.all_year_variation,self.index_year = self.all_one_hot(self.batch_size,self.dim_year)
         self.all_year_variation.to(self.device)
         self.index_year.to(self.device)
-
+        print("SELF INDEX YEAR",self.index_year)
 
         self.real_image_cat = self.real_image.clone()
         self.year_label_cat = self.year_label.clone()
@@ -186,7 +186,7 @@ class BilinearGANModel(BaseModel):
             self.loss_idt = 0
 
         # GAN loss D(G(A))
-        output_fake = self.netD(self.new_fake).gather(dim=1, index = self.index_year)
+        output_fake = self.netD(self.new_fake).gather(dim=1, index = self.index_year_cat)
         print("OUTPUT FAKE", output_fake.shape)
         self.loss_G = self.criterionGAN(output_fake, True)
 
