@@ -127,6 +127,8 @@ class BilinearGANModel(BaseModel):
         print("FORWARD BILINEAR")
         self.batch_size = self.real_image.shape[0]
         self.all_year_variation,self.index_year = self.all_one_hot(self.batch_size,self.dim_year)
+        self.all_year_variation.to(self.device)
+        self.index_year.to(self.device)
 
 
         self.real_image_cat = self.real_image.clone()
@@ -136,6 +138,8 @@ class BilinearGANModel(BaseModel):
             self.year_label_cat = torch.cat((self.year_label_cat,self.year_label.clone()),dim=0)
         # print("real image cat", self.real_image_cat.shape)
         # print("all year variation", self.all_year_variation.shape)
+        self.real_image_cat.to(self.device)
+        self.year_label_cat.to(self.device)
         self.new_fake = self.netG(self.real_image_cat,self.all_year_variation)
         self.rec = self.netG(self.new_fake,self.year_label_cat)
 
