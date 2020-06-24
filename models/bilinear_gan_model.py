@@ -148,6 +148,7 @@ class BilinearGANModel(BaseModel):
         """
         # Real
         pred_real = netD(real)
+        print("Pred Real Shape",pred_real.shape)
         loss_D_real = self.criterionGAN(pred_real, True)
         # Fake
         pred_fake = netD(fake.detach())
