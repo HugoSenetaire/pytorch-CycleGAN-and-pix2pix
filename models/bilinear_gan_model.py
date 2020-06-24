@@ -140,8 +140,8 @@ class BilinearGANModel(BaseModel):
         # print("all year variation", self.all_year_variation.shape)
         self.real_image_cat.to(self.device)
         self.year_label_cat.to(self.device)
-        self.new_fake = self.netG(self.real_image_cat,self.all_year_variation)
-        self.rec = self.netG(self.new_fake,self.year_label_cat)
+        self.new_fake = self.netG(self.real_image_cat,self.all_year_variation).to(self.device)
+        self.rec = self.netG(self.new_fake,self.year_label_cat).to(self.device)
 
     def backward_D_basic(self, netD, real, fake):
         """Calculate GAN loss for the discriminator
