@@ -104,10 +104,12 @@ class BilinearGANModel(BaseModel):
     def all_one_hot(self, batch,dim):
         """ Get all possible date in one hot format """
         ######### A change en utilisant scatter comme au dessus, ça peut se faire directement
-        data_year_one_hot = torch.zeros((batch,dim))
+        data_year_one_hot = torch.zeros((batch,dim)).scatter_(1, torch.tensor([[0]]*batch), 1.0)
+        index_year = torch.zeros((batch))
         for i in range(1,dim):
-            data_year_one_hot = torch.cat((data_year_one_hot,torch.ones((batch,dim))*i),dim=0)
-        return data_year_one_hot
+            data_year_one_hot = torch.cat((data_year_one_hot, torch.zeros((batch,dim)).scatter_(1, torch.tensor([[i]]*batch), 1.0)),dim=0)
+            index_year = torch.cat((index_year,torch.ones((batch))*i))
+        return data_year_one_hot,index_year
 
     def set_input(self, input):
         """Unpack input data from the dataloader and perform necessary pre-processing steps.
@@ -124,16 +126,16 @@ class BilinearGANModel(BaseModel):
         # self.fake = self.netG(self.real_image,self.year_label)
         print("FORWARD BILINEAR")
         self.batch_size = self.real_image.shape[0]
-        self.all_year_variation = self.all_one_hot(self.batch_size,self.dim_year)
+        self.all_year_variation,self.index_year = self.all_one_hot(self.batch_size,self.dim_year)
 
 
         self.real_image_cat = self.real_image.clone()
-        self. year_label_cat = self.year_label.clone()
+        self.year_label_cat = self.year_label.clone()
         for k in range(self.dim_year-1):
             self.real_image_cat = torch.cat((self.real_image_cat,self.real_image.clone()),dim=0)
             self.year_label_cat = torch.cat((self.year_label_cat,self.year_label.clone()),dim=0)
-        print("real image cat", self.real_image_cat.shape)
-        print("all year variation", self.all_year_variation.shape)
+        # print("real image cat", self.real_image_cat.shape)
+        # print("all year variation", self.all_year_variation.shape)
         self.new_fake = self.netG(self.real_image_cat,self.all_year_variation)
         self.rec = self.netG(self.new_fake,self.year_label_cat)
 
@@ -146,12 +148,15 @@ class BilinearGANModel(BaseModel):
         Return the discriminator loss.
         We also call loss_D.backward() to calculate the gradients.
         """
-        # Real
-        pred_real = netD(real)
+        # 
+        index = torch.where(self.year_label)[1]
+        print(self.year_label)
+        print(index)
+        pred_real = netD(real).gather(dim=1, index = self.index_year)
         print("Pred Real Shape",pred_real.shape)
         loss_D_real = self.criterionGAN(pred_real, True)
         # Fake
-        pred_fake = netD(fake.detach())
+        pred_fake = netD(fake.detach()).gather(dim=1, index = self.index_year)
         loss_D_fake = self.criterionGAN(pred_fake, False)
         # Combined loss and calculate gradients
         loss_D = (loss_D_real + loss_D_fake) * 0.5
@@ -177,7 +182,7 @@ class BilinearGANModel(BaseModel):
             self.loss_idt = 0
 
         # GAN loss D(G(A))
-        output_fake = self.netD(self.new_fake)
+        output_fake = self.netD(self.new_fake).gather(dim=1, index = self.index_year)
         print("OUTPUT FAKE", output_fake.shape)
         self.loss_G = self.criterionGAN(output_fake, True)
 

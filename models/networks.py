@@ -404,8 +404,8 @@ class ResnetGeneratorBilinear(nn.Module):
         # print("Feature model down",features.shape)
         features = torch.flatten(features,1)
     
-        print("FEATURE YEAR",features.shape)
-        print("YEAR",year.shape)
+        # print("FEATURE YEAR",features.shape)
+        # print("YEAR",year.shape)
         # features = self.linear1(features)
         features = self.bilinear(features,year)
         # features = self.linear2(features)
