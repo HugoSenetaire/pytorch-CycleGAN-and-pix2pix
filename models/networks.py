@@ -349,7 +349,7 @@ class ResnetGeneratorBilinear(nn.Module):
         self.first_layer = nn.Sequential(*first_layer)
                 
         model_down = []
-        n_downsampling = 3
+        n_downsampling = 2
         for i in range(n_downsampling):  # add downsampling layers
             mult = 2 ** i
             model_down += [nn.Conv2d(ngf * mult, ngf * mult * 2, kernel_size=5, stride=4, padding=2, bias=use_bias),
@@ -364,12 +364,13 @@ class ResnetGeneratorBilinear(nn.Module):
         self.new_size =  int(self.input_size/(4**n_downsampling))
         self.total_input = int((self.input_size/(4**n_downsampling))*(self.input_size/(4**n_downsampling))*ngf*mult)
         print("TOTAL INPUT", self.total_input)
+        print("new size", new_size)
         print("dim_year", self.dim_year)
         print("TOTAL PARAMETER", self.total_input* self.total_input*self.dim_year)
         self.maxfilter = ngf * mult
-        self.linear1 = nn.Linear(self.total_input, 1024)
-        self.bilinear = nn.Bilinear(1024,self.dim_year,1024)
-        self.linear2 = nn.Linear(1024, self.total_input)
+        # self.linear1 = nn.Linear(self.total_input, 1024)
+        self.bilinear = nn.Bilinear(self.total_input,self.dim_year,self.total_input)
+        # self.linear2 = nn.Linear(1024, self.total_input)
         
 
 
@@ -403,9 +404,9 @@ class ResnetGeneratorBilinear(nn.Module):
         features = torch.flatten(features,1)
         # print("FEATURE YEAR",features.shape)
         # print("YEAR",year.shape)
-        features = self.linear1(features)
+        # features = self.linear1(features)
         features = self.bilinear(features,year)
-        features = self.linear2(features)
+        # features = self.linear2(features)
         features = torch.reshape(features,(-1,self.maxfilter,self.new_size,self.new_size))
         # print("features reshaped", features.shape)
         generated = self.model_up_aux(features)
