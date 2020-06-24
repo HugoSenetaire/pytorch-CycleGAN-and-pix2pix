@@ -105,12 +105,9 @@ class BilinearGANModel(BaseModel):
         """ Get all possible date in one hot format """
         ######### A change en utilisant scatter comme au dessus, ça peut se faire directement
         data_year_one_hot = torch.zeros((batch,dim)).scatter_(1, torch.tensor([[0]]*batch), 1.0)
-        index_year = torch.zeros((batch))
         for i in range(1,dim):
             data_year_one_hot = torch.cat((data_year_one_hot, torch.zeros((batch,dim)).scatter_(1, torch.tensor([[i]]*batch), 1.0)),dim=0)
-            index_year = torch.cat((index_year,torch.ones((batch))*i))
-        index_year = index_year.type(torch.LongTensor)
-        return data_year_one_hot,index_year
+        return data_year_one_hot
 
     def set_input(self, input):
         """Unpack input data from the dataloader and perform necessary pre-processing steps.
@@ -127,10 +124,11 @@ class BilinearGANModel(BaseModel):
         # self.fake = self.netG(self.real_image,self.year_label)
         print("FORWARD BILINEAR")
         self.batch_size = self.real_image.shape[0]
-        self.all_year_variation,self.index_year = self.all_one_hot(self.batch_size,self.dim_year)
+        self.all_year_variation = self.all_one_hot(self.batch_size,self.dim_year)
         self.all_year_variation = self.all_year_variation.to(self.device)
-        self.index_year = self.index_year.to(self.device)
-        print("SELF INDEX YEAR",self.index_year, type(self.index_year),self.index_year.device)
+
+
+        # print("SELF INDEX YEAR",self.index_year, type(self.index_year),self.index_year.device)
 
         self.real_image_cat = self.real_image.clone()
         self.year_label_cat = self.year_label.clone()
@@ -144,6 +142,23 @@ class BilinearGANModel(BaseModel):
         self.new_fake = self.netG(self.real_image_cat,self.all_year_variation).to(self.device)
         self.rec = self.netG(self.new_fake,self.year_label_cat).to(self.device)
 
+    def filter_index(self,year_label,output_discriminator):
+        index = torch.ge(year_label,0.5)
+        shape_discriminator = output_discriminator.shape
+        new_shape = torch.tensor([shape[i]for i in range(len(shape))]).type(torch.int)
+        new_shape[1] = torch.tensor(1)
+
+        for i in range(2,len(shape_discriminator)):
+            index = index.unsqueeze(-1)
+        index = index.expand(shape_discriminator)
+
+        shape_discriminator[1]=torch.tensor(1)
+        # IS reshape really necessary ?
+        filtered_output = output_discriminator.masked_select(index).reshape(new_shape)
+
+        return filtered_output
+
+
     def backward_D_basic(self, netD, real, fake):
         """Calculate GAN loss for the discriminator
         Parameters:
@@ -153,16 +168,13 @@ class BilinearGANModel(BaseModel):
         Return the discriminator loss.
         We also call loss_D.backward() to calculate the gradients.
         """
-        # 
-        index = torch.where(self.year_label)[1]
-        print(self.year_label)
-        print(index)
-        pred_real = netD(real).gather(dim=1, index = self.index_year)
-        print("Pred Real Shape",pred_real.shape)
-        loss_D_real = self.criterionGAN(pred_real, True)
+        pred_real = netD(real)
+        filtered_pred_real = self.filter_index(self.year_label,pred_real)
+        loss_D_real = self.criterionGAN(filtered_pred_real, True)
         # Fake
-        pred_fake = netD(fake.detach()).gather(dim=1, index = self.index_year)
-        loss_D_fake = self.criterionGAN(pred_fake, False)
+        pred_fake = netD(fake.detach())
+        filtered_pred_fake = self.filter_index(self.all_year_variation, pred_fake)
+        loss_D_fake = self.criterionGAN(filtered_pred_fake, False)
         # Combined loss and calculate gradients
         loss_D = (loss_D_real + loss_D_fake) * 0.5
         loss_D.backward()
@@ -187,9 +199,10 @@ class BilinearGANModel(BaseModel):
             self.loss_idt = 0
 
         # GAN loss D(G(A))
-        output_fake = self.netD(self.new_fake).gather(dim=1, index = self.index_year)
-        print("OUTPUT FAKE", output_fake.shape)
-        self.loss_G = self.criterionGAN(output_fake, True)
+        output_fake = self.netD(self.new_fake)
+        filtered_output_fake = self.filter_index(self.all_year_variation,output_fake)
+        print("OUTPUT FAKE", filtered_output_fake.shape)
+        self.loss_G = self.criterionGAN(filtered_output_fake, True)
 
         # Forward cycle loss || G_B(G_A(A)) - A||
         self.loss_cycle = self.criterionCycle(self.rec, self.real_image_cat) * lambda_cycle
