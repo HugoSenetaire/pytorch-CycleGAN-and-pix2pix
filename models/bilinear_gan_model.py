@@ -186,7 +186,7 @@ class BilinearGANModel(BaseModel):
             self.loss_idt = 0
 
         # GAN loss D(G(A))
-        output_fake = self.netD(self.new_fake).gather(dim=1, index = self.index_year_cat)
+        output_fake = self.netD(self.new_fake).gather(dim=1, index = self.index_year)
         print("OUTPUT FAKE", output_fake.shape)
         self.loss_G = self.criterionGAN(output_fake, True)
 
