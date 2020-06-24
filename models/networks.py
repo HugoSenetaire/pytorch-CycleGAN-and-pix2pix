@@ -645,7 +645,7 @@ class UnetSkipConnectionBlock(nn.Module):
 class NLayerDiscriminator(nn.Module):
     """Defines a PatchGAN discriminator"""
 
-    def __init__(self, input_nc, ndf=64, n_layers=3, norm_layer=nn.BatchNorm2d):
+    def __init__(self, input_nc, ndf=64, n_layers=3, norm_layer=nn.BatchNorm2d, output = 1):
         """Construct a PatchGAN discriminator
 
         Parameters:
@@ -689,7 +689,9 @@ class NLayerDiscriminator(nn.Module):
 
     def forward(self, input):
         """Standard forward."""
-        return self.model(input)
+        output = self.model(input)
+        print(output.shape)
+        return output
 
 
 class PixelDiscriminator(nn.Module):
