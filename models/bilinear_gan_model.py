@@ -129,7 +129,7 @@ class BilinearGANModel(BaseModel):
         self.all_year_variation,self.index_year = self.all_one_hot(self.batch_size,self.dim_year)
         self.all_year_variation.to(self.device)
         self.index_year.to(self.device)
-        print("SELF INDEX YEAR",self.index_year, type(self.index_year))
+        print("SELF INDEX YEAR",self.index_year, type(self.index_year),self.index_year.device)
 
         self.real_image_cat = self.real_image.clone()
         self.year_label_cat = self.year_label.clone()
