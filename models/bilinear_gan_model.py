@@ -177,7 +177,9 @@ class BilinearGANModel(BaseModel):
             self.loss_idt = 0
 
         # GAN loss D(G(A))
-        self.loss_G = self.criterionGAN(self.netD(self.new_fake), True)
+        output_fake = self.netD(self.new_fake)
+        print("OUTPUT FAKE", output_fake.shape)
+        self.loss_G = self.criterionGAN(output_fake, True)
 
         # Forward cycle loss || G_B(G_A(A)) - A||
         self.loss_cycle = self.criterionCycle(self.rec, self.real_image_cat) * lambda_cycle
