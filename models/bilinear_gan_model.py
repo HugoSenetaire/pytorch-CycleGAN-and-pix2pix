@@ -109,6 +109,7 @@ class BilinearGANModel(BaseModel):
         for i in range(1,dim):
             data_year_one_hot = torch.cat((data_year_one_hot, torch.zeros((batch,dim)).scatter_(1, torch.tensor([[i]]*batch), 1.0)),dim=0)
             index_year = torch.cat((index_year,torch.ones((batch))*i))
+        index_year = index_year.type(torch.LongTensor)
         return data_year_one_hot,index_year
 
     def set_input(self, input):
