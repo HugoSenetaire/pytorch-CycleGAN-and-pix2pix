@@ -139,6 +139,8 @@ class BaseModel(ABC):
 
     def save_visuals(self,epoch):
         visual_ret = self.get_current_visuals()
+        if not os.path.exists(os.path.join(self.save_dir, "Image")):
+            os.makedirs(os.path.join(self.save_dir, "Image"))
         for name in self.visual_names:
             batch_size_val = int(visual_ret[name].shape[0])
             torchvision.utils.save_image(visual_ret[name], os.path.join(self.save_dir, "Image",name +"_" + str(epoch)+".jpg"), nrow=int(batch_size_val/4)+1)
