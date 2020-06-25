@@ -5,6 +5,7 @@ from abc import ABC, abstractmethod
 from . import networks
 import torchvision
 
+
 class BaseModel(ABC):
     """This class is an abstract base class (ABC) for models.
     To create a subclass, you need to implement the following five functions:
@@ -140,7 +141,7 @@ class BaseModel(ABC):
         visual_ret = self.get_current_visuals()
         for name in self.visual_names:
             batch_size_val = int(visual_ret[name].shape[0])
-            torchvision.utils.save_image(visual_ret[name], os.path.join(self.save_dir, "Image",name +"_" + str(epoch)+".jpg", nrow=int(batch_size_val/4)+1))
+            torchvision.utils.save_image(visual_ret[name], os.path.join(self.save_dir, "Image",name +"_" + str(epoch)+".jpg"), nrow=int(batch_size_val/4)+1)
 
     def get_current_losses(self):
         """Return traning losses / errors. train.py will print out these errors on console, and save them to a file"""
