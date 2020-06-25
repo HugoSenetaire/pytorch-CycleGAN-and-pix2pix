@@ -35,6 +35,7 @@ class BaseModel(ABC):
         self.isTrain = opt.isTrain
         self.device = torch.device('cuda:{}'.format(self.gpu_ids[0])) if self.gpu_ids else torch.device('cpu')  # get device name: CPU or GPU
         self.save_dir = os.path.join(opt.checkpoints_dir, opt.name)  # save all the checkpoints to save_dir
+        self.image_dir = opt.image_dir
         if opt.preprocess != 'scale_width':  # with [scale_width], input images might have different sizes, which hurts the performance of cudnn.benchmark.
             torch.backends.cudnn.benchmark = True
         self.loss_names = []
@@ -139,11 +140,11 @@ class BaseModel(ABC):
 
     def save_visuals(self,epoch):
         visual_ret = self.get_current_visuals()
-        if not os.path.exists(os.path.join(self.save_dir, "Image")):
-            os.makedirs(os.path.join(self.save_dir, "Image"))
+        if not os.path.exists(os.path.join(self.image_dir, "Image")):
+            os.makedirs(os.path.join(self.image_dir, "Image"))
         for name in self.visual_names:
             batch_size_val = int(visual_ret[name].shape[0])
-            torchvision.utils.save_image(visual_ret[name], os.path.join(self.save_dir, "Image",name +"_" + str(epoch)+".jpg"), nrow=int(batch_size_val/4)+1)
+            torchvision.utils.save_image(visual_ret[name], os.path.join(self.image_dir, "Image",name +"_" + str(epoch)+".jpg"), nrow=int(batch_size_val/4)+1)
 
     def get_current_losses(self):
         """Return traning losses / errors. train.py will print out these errors on console, and save them to a file"""
