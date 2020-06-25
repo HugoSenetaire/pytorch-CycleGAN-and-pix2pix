@@ -132,7 +132,7 @@ class BaseModel(ABC):
             if isinstance(name, str):
            
                 visual_ret[name] = getattr(self, name)
-                print(visual_ret)
+                
         return visual_ret
 
     def get_current_losses(self):
