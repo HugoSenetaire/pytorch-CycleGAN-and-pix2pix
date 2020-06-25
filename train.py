@@ -45,8 +45,10 @@ if __name__ == '__main__':
         visualizer.reset()              # reset the visualizer: make sure it saves the results to HTML at least once every epoch
 
         for i, data in enumerate(dataset):   # inner loop within one epoch
-            print("================================") 
-            print("DATA",data[0].shape, data[1].shape)
+            # print("================================") 
+            # print("DATA",data[0].shape, data[1].shape)
+            if total_iters % 50 == 0 :
+                print("Total_iters is {}".format(total_iters))
             
             
             iter_start_time = time.time()  # timer for computation per iteration
