@@ -136,7 +136,7 @@ class BaseModel(ABC):
         return visual_ret
 
 
-    def save_visual(self,epoch):
+    def save_visuals(self,epoch):
         visual_ret = self.get_current_visuals()
         for name in self.visual_names:
             batch_size_val = int(visual_ret[name].shape[0])
