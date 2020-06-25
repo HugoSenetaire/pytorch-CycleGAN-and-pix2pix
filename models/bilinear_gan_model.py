@@ -145,7 +145,7 @@ class BilinearGANModel(BaseModel):
     def filter_index(self,year_label,output_discriminator):
         index = torch.ge(year_label,0.5)
         shape_discriminator = output_discriminator.shape
-        new_shape = list(torch.tensor([shape_discriminator[i]for i in range(len(shape_discriminator))]).type(torch.int))
+        new_shape = torch.tensor([shape_discriminator[i]for i in range(len(shape_discriminator))]).type(torch.int)
         new_shape[1] = torch.tensor(1)
     
 
@@ -153,7 +153,7 @@ class BilinearGANModel(BaseModel):
             index = index.unsqueeze(-1)
         index = index.expand(shape_discriminator)
 
-        shape_discriminator[1]=torch.tensor(1)
+        new_shape[1]=torch.tensor(1)
         # IS reshape really necessary ?
         filtered_output = output_discriminator.masked_select(index).reshape(new_shape)
 
