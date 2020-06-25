@@ -139,6 +139,7 @@ class BaseModel(ABC):
 
 
     def save_visuals(self,epoch):
+        print("save_visuals")
         visual_ret = self.get_current_visuals()
         if not os.path.exists(os.path.join(self.image_dir, "Image")):
             os.makedirs(os.path.join(self.image_dir, "Image"))
