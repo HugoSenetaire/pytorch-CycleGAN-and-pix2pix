@@ -145,7 +145,7 @@ class BilinearGANModel(BaseModel):
     def filter_index(self,year_label,output_discriminator):
         index = torch.ge(year_label,0.5)
         shape_discriminator = output_discriminator.shape
-        new_shape = torch.tensor([shape_discriminator[i]for i in range(len(shape_discriminator))]).type(torch.int)
+        new_shape = [shape_discriminator[i]for i in range(len(shape_discriminator))]
         new_shape[1] = torch.tensor(1)
     
 
