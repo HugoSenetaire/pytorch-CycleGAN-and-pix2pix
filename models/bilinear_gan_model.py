@@ -53,7 +53,7 @@ class BilinearGANModel(BaseModel):
         # specify the training losses you want to print out. The training/test scripts will call <BaseModel.get_current_losses>
         self.loss_names = ['D', 'G', 'cycle', 'idt']
         # specify the images you want to save/display. The training/test scripts will call <BaseModel.get_current_visuals>
-        visual_names = ['real', 'fake', 'rec']
+        visual_names = ['real_image', 'new_fake', 'rec']
         if self.isTrain and self.opt.lambda_identity > 0.0:  # if identity loss is used, we also visualize idt_B=G_A(B) ad idt_A=G_A(B)
             visual_names.append('idt')
 
