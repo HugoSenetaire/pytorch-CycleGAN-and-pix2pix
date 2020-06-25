@@ -128,7 +128,9 @@ class BaseModel(ABC):
         """Return visualization images. train.py will display these images with visdom, and save the images to a HTML"""
         visual_ret = OrderedDict()
         for name in self.visual_names:
+            print(name)
             if isinstance(name, str):
+                print(name)
                 visual_ret[name] = getattr(self, name)
         return visual_ret
 
