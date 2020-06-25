@@ -138,14 +138,13 @@ class BaseModel(ABC):
         return visual_ret
 
 
-    def save_visuals(self,epoch):
-        print("save_visuals")
+    def save_visuals(self,epoch, iter_idx):
         visual_ret = self.get_current_visuals()
         if not os.path.exists(os.path.join(self.image_dir, "Image")):
             os.makedirs(os.path.join(self.image_dir, "Image"))
         for name in self.visual_names:
             batch_size_val = int(visual_ret[name].shape[0])
-            torchvision.utils.save_image(visual_ret[name], os.path.join(self.image_dir, "Image",name +"_" + str(epoch)+".jpg"), nrow=int(batch_size_val/4)+1)
+            torchvision.utils.save_image(visual_ret[name], os.path.join(self.image_dir, "Image",name +"_" +iter_idx+"_" + str(epoch)+".jpg"), nrow=int(batch_size_val/4)+1)
 
     def get_current_losses(self):
         """Return traning losses / errors. train.py will print out these errors on console, and save them to a file"""
