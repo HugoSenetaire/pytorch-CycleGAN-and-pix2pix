@@ -122,7 +122,7 @@ class BilinearGANModel(BaseModel):
     def forward(self):
         """Run forward pass; called by both functions <optimize_parameters> and <test>."""
         # self.fake = self.netG(self.real_image,self.year_label)
-        print("FORWARD BILINEAR")
+        # print("FORWARD BILINEAR")
         self.batch_size = self.real_image.shape[0]
         self.all_year_variation = self.all_one_hot(self.batch_size,self.dim_year)
         self.all_year_variation = self.all_year_variation.to(self.device)
@@ -202,7 +202,7 @@ class BilinearGANModel(BaseModel):
         # GAN loss D(G(A))
         output_fake = self.netD(self.new_fake)
         filtered_output_fake = self.filter_index(self.all_year_variation,output_fake)
-        print("OUTPUT FAKE", filtered_output_fake.shape)
+        # print("OUTPUT FAKE", filtered_output_fake.shape)
         self.loss_G = self.criterionGAN(filtered_output_fake, True)
 
         # Forward cycle loss || G_B(G_A(A)) - A||
