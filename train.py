@@ -33,8 +33,9 @@ if __name__ == '__main__':
     print(f"Display frequency is :  {opt.display_freq}")
 
     print(f"Print frequency is :  {opt.print_freq}")
-    opt.dim_year = dataset.dataset.dim
-    opt.output_d = dataset.dataset.dim
+    if opt.dataset_mode == "cars":
+        opt.dim_year = dataset.dataset.dim
+        opt.output_d = dataset.dataset.dim
     model = create_model(opt)      # create a model given opt.model and other options
     model.setup(opt)               # regular setup: load and print networks; create schedulers
     visualizer = Visualizer(opt)   # create a visualizer that display/save images and plots
