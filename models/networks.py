@@ -145,11 +145,11 @@ def define_G(input_nc, output_nc, ngf, netG, norm='batch', use_dropout=False, in
     """
     net = None
     norm_layer = get_norm_layer(norm_type=norm)
-
+    
     if netG == 'resnet_9blocks':
         net = ResnetGeneratorBilinear(input_nc, output_nc, ngf, norm_layer=norm_layer, use_dropout=use_dropout, n_blocks=9, dim_year=dim_year)
     elif netG == 'resnet_6blocks':
-        net = ResnetGeneratorBilinear(input_nc, output_nc, ngf, norm_layer=norm_layer, use_dropout=use_dropout, n_blocks=6, dim_year=dim_year)
+        net = ResnetGenerator(input_nc, output_nc, ngf, norm_layer=norm_layer, use_dropout=use_dropout, n_blocks=6)
     elif netG == 'resnet_3blocks':
         net = ResnetGeneratorBilinear(input_nc, output_nc, ngf, norm_layer=norm_layer, use_dropout=use_dropout, n_blocks=3, dim_year=dim_year)
     # elif netG == 'unet_128':
